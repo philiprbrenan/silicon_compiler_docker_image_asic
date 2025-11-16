@@ -21,8 +21,8 @@ my @ext      = qw(.pl .py .txt .md);                                            
 my $registry = 'ghcr.io';                                                       # Container registery
 my $baseOS   = 'ubuntu:22.04';                                                  # Base docker image
 my $stepsDir = 'steps';                                                         # Folder containing docker build files for each step of the builds
-my @tools    = qw(openroad klayout yosys sv2v yosys-slang);                     # Tools to install for silicon compiler
-my $base     = q(base);                                                         # Silicon compiler base installation
+my $base     = q(base);                                                         # Base for silicon compiler
+my @tools    = ($base, qw(openroad klayout yosys sv2v yosys-slang));            # Base plus tools to install for silicon compiler
 
 sub container($tag)                                                             # The name of the container to be produced at each step
  {my $f = fpf $registry, $user, $repo;                                          # Untagged name
@@ -60,12 +60,12 @@ RUN python3 -m pip install --no-cache-dir .
 RUN python3 -m pip list
 END
 
-for my $t(keys @tools)                                                          # Install each tool in a seperate docker image built on the previous image
- {my $from = container($t);                                                     # Precious docker image
-  my $tool = $tools[$t];                                                        # Tool being installed
-  owf(fpe($stepsDir, $tool, q(txt)), <<END),                                    # The tools start at 1 because 0 is occupied by the base install
+for my $t(@tools)                                                               # Install each tool in a seperate docker image built on the previous image
+ {next if $t eq $base;                                                          # Skip base as already installed
+  my $from = container($t);                                                     # Precious docker image
+  owf(fpe($stepsDir, $t, q(txt)), <<END),                                       # The tools start at 1 because 0 is occupied by the base install
 FROM $from
-RUN sc-install $tool
+RUN sc-install $t
 WORKDIR /app
 CMD ["/bin/bash"]
 END
@@ -85,10 +85,10 @@ on:
 jobs:
 END
 
-for my $step(0 .. @tools)                                                       # Each step of the build - base install plus a build for each tool
- {my $Step  = $step - 1;
-  my $name  = $step ? $tools[$Step] : $base;
-  my $needs = $step ? "needs: step$Step" : "";
+for my $step(keys @tools)                                                       # Add each tool to the build
+ {my $name  = $tools[$step];
+  my $step1 = $step - 1;
+  my $needs = $step ? "needs: step$step1" : "";
 
   my $job_header = <<"JOB_HEADER";                                              # Each step is built as a separate job so that we get a clean empty machine each time - else we will run out of file space
   step$step:
@@ -116,7 +116,7 @@ LOGIN
   my $image = container($name);                                                 # The image we are going to build
   my $build = <<"BUILD";                                                        # Add this tool to the previous image built
 
-      - name: Build step $step
+      - name: $name
         uses: docker/build-push-action\@v4
         with:
           context: $stepsDir
