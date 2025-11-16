@@ -1,4 +1,4 @@
-# Test 2025-11-16 at 16:04:19
+# Test 2025-11-16 at 16:05:17
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -38,7 +38,7 @@ jobs:
   step1:
     name: openroad
     runs-on: ubuntu-latest
-    needs: stepbase
+    needs: step0
     steps:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
@@ -64,7 +64,7 @@ jobs:
   step2:
     name: klayout
     runs-on: ubuntu-latest
-    needs: stepopenroad
+    needs: step1
     steps:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
@@ -90,7 +90,7 @@ jobs:
   step3:
     name: yosys
     runs-on: ubuntu-latest
-    needs: stepklayout
+    needs: step2
     steps:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
@@ -116,7 +116,7 @@ jobs:
   step4:
     name: sv2v
     runs-on: ubuntu-latest
-    needs: stepyosys
+    needs: step3
     steps:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
@@ -142,7 +142,7 @@ jobs:
   step5:
     name: yosys-slang
     runs-on: ubuntu-latest
-    needs: stepsv2v
+    needs: step4
     steps:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
