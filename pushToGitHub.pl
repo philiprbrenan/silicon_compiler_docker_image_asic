@@ -71,21 +71,14 @@ END
 my @files = searchDirectoryTreesForMatchingFiles($home, @ext);                  # Files to upload
    @files = changedFiles $shaFile, @files;                                      # Filter out files that have not changed
 
-if (!@files)                                                                    # No new files to upload
- {say STDERR "Everything up to date";
-  exit;
- }
+for my $s(@files)                                                               # Upload each selected file
+ {my $c = readBinaryFile $s;                                                    # Load file
 
-if (1)                                                                          # Upload via github crud
- {for my $s(@files)                                                             # Upload each selected file
-   {my $c = readBinaryFile $s;                                                  # Load file
+  $c = expandWellKnownWordsAsUrlsInMdFormat $c if $s =~ m(README);              # Expand README
 
-    $c = expandWellKnownWordsAsUrlsInMdFormat $c if $s =~ m(README);            # Expand README
-
-    my $t = swapFilePrefix $s, $home;                                           # File on github
-    my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                     # Write file into github
-    lll "$w  $t";
-   }
+  my $t = swapFilePrefix $s, $home;                                             # File on github
+  my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                       # Write file into github
+  lll "$w  $t";
  }
 
 my $dt    = dateTimeStamp;
