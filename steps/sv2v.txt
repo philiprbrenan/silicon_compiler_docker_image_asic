@@ -1,4 +1,4 @@
-FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:sv2v
-RUN sc-install sv2v
+FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:yosys
+RUN sc-install 4
 WORKDIR /app
 CMD ["/bin/bash"]
