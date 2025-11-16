@@ -102,6 +102,7 @@ for my $step(0 .. 1+@tools)                                                     
 
   my $job_header = <<"JOB_HEADER";                                              # Each step is built as a separate job so that we get a clean empty machine each time - else we will run out of file space
   step$step:
+    name: $name
     runs-on: ubuntu-latest
     $needs
     steps:
