@@ -95,7 +95,7 @@ on:
 jobs:
 END
 
-for my $step(0 .. 1+@tools)                                                     # Each step of the build - base install plus a build for each tool
+for my $step(0 .. @tools)                                                       # Each step of the build - base install plus a build for each tool
  {my $Step  = $step - 1;
   my $name  = $step > 0 ? $tools[$Step] : "Base";
   my $needs = $step > 0 ? "needs: step$Step" : "";
