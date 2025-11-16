@@ -63,7 +63,7 @@ END
 for my $t(keys @tools)                                                          # Install each tool in a seperate docker image built on the previous image
  {next unless $t;                                                               # Skip base as already installed
   my $from = container($tools[$t-1]);                                           # Precious docker image
-  owf(fpe($stepsDir, $t, q(txt)), <<END),                                       # The tools start at 1 because 0 is occupied by the base install
+  owf(fpe($stepsDir,   $tools[$t], q(txt)), <<END),                             # The tools start at 1 because 0 is occupied by the base install
 FROM $from
 RUN sc-install $t
 WORKDIR /app
