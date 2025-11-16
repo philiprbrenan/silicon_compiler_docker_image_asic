@@ -1,4 +1,4 @@
-FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:yosys
-RUN sc-install yosys
+FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:klayout
+RUN sc-install 3
 WORKDIR /app
 CMD ["/bin/bash"]
