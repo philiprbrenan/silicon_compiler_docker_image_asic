@@ -1,4 +1,4 @@
-# Test 2025-11-16 at 01:42:01
+# Test 2025-11-16 at 14:23:10
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -10,7 +10,7 @@ on:
 jobs:
 
   step0:
-    name: Base
+    name: base
     runs-on: ubuntu-latest
     
     steps:
@@ -31,9 +31,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/0.txt
+          file: steps/base.txt
           push: true
-          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:0
+          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:base
 
   step1:
     name: openroad
@@ -57,9 +57,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/1.txt
+          file: steps/openroad.txt
           push: true
-          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:1
+          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:openroad
 
   step2:
     name: klayout
@@ -83,9 +83,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/2.txt
+          file: steps/klayout.txt
           push: true
-          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:2
+          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:klayout
 
   step3:
     name: yosys
@@ -109,9 +109,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/3.txt
+          file: steps/yosys.txt
           push: true
-          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:3
+          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:yosys
 
   step4:
     name: sv2v
@@ -135,9 +135,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/4.txt
+          file: steps/sv2v.txt
           push: true
-          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:4
+          tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:sv2v
 
   step5:
     name: yosys-slang
@@ -161,6 +161,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: steps
-          file: steps/5.txt
+          file: steps/yosys-slang.txt
           push: true
           tags: ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:latest
