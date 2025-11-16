@@ -19,21 +19,24 @@ my $shaFile  = fpe $home, q(sha);                                               
 my @ext      = qw(.pl .py .txt .md);                                            # Extensions of files to upload to github
 
 my $registry = 'ghcr.io';                                                       # Container registery
-my $base     = 'ubuntu:22.04';                                                  # Base docker image
+my $baseOS   = 'ubuntu:22.04';                                                  # Base docker image
 my $stepsDir = 'steps';                                                         # Folder containing docker build files for each step of the builds
 my @tools    = qw(openroad klayout yosys sv2v yosys-slang);                     # Tools to install for silicon compiler
+my $base     = q(base);                                                         # Silicon compiler base installation
 
-sub container($step)                                                            # The name of the container to be produced at each step
- {my $f = fpf $registry, $user, $repo;
-  return qq($f:latest) if $step == @tools;                                      # Each tool is installed separately and there is a base install of silicon complier
-  qq($f:$step)
+sub container($tag)                                                             # The name of the container to be produced at each step
+ {my $f = fpf $registry, $user, $repo;                                          # Untagged name
+  return qq($f:latest) if $tag eq $tools[-1];                                   # Each tool is installed separately with the last tool being installed to create the final version of the image
+  qq($f:$tag)                                                                   # Intermediate image
  }
 
-say STDERR timeStamp,  " Push to github $repo";
+say STDERR timeStamp,  " Push to github $repo";                                 # Tile of the piece
 
-owf(fpe($stepsDir, 0, q(txt)), <<END);                                          # Install silicon compiler base
+clearFolder $stepsDir, 10;                                                      # Empty folder containiong docker build files if present
+
+owf(fpe($stepsDir, $base, q(txt)), <<END);                                      # Docker image for silicon compiler base
 # Silicon Compiler Development Environment for ASIC Development Installed in a Docker Image
-FROM $base
+FROM $baseOS
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -58,9 +61,9 @@ RUN python3 -m pip list
 END
 
 for my $t(keys @tools)                                                          # Install each tool in a seperate docker image built on the previous image
- {my $from = container($t);
-  my $tool = $tools[$t];
-  owf(fpe($stepsDir, $t+1, q(txt)), <<END),                                     # The tools start at 1 because 0 is occupied by the base install
+ {my $from = container($t);                                                     # Precious docker image
+  my $tool = $tools[$t];                                                        # Tool being installed
+  owf(fpe($stepsDir, $tool, q(txt)), <<END),                                    # The tools start at 1 because 0 is occupied by the base install
 FROM $from
 RUN sc-install $tool
 WORKDIR /app
@@ -68,21 +71,8 @@ CMD ["/bin/bash"]
 END
  }
 
-my @files = searchDirectoryTreesForMatchingFiles($home, @ext);                  # Files to upload
-   @files = changedFiles $shaFile, @files;                                      # Filter out files that have not changed
-
-for my $s(@files)                                                               # Upload each selected file
- {my $c = readBinaryFile $s;                                                    # Load file
-
-  $c = expandWellKnownWordsAsUrlsInMdFormat $c if $s =~ m(README);              # Expand README
-
-  my $t = swapFilePrefix $s, $home;                                             # File on github
-  my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                       # Write file into github
-  lll "$w  $t";
- }
-
-my $dt    = dateTimeStamp;
-my @yml   = <<"END";                                                            # Create workflow
+my $dt  = dateTimeStamp;                                                        # Ensure update occurs by making the file contents unique
+my @yml = <<"END";                                                              # Create workflow
 # Test $dt
 name: Build and Push Docker Image
 run-name: $repo
@@ -97,7 +87,7 @@ END
 
 for my $step(0 .. @tools)                                                       # Each step of the build - base install plus a build for each tool
  {my $Step  = $step - 1;
-  my $name  = $step ? $tools[$Step] : "Base";
+  my $name  = $step ? $tools[$Step] : $base;
   my $needs = $step ? "needs: step$Step" : "";
 
   my $job_header = <<"JOB_HEADER";                                              # Each step is built as a separate job so that we get a clean empty machine each time - else we will run out of file space
@@ -123,14 +113,14 @@ CHECKOUT
           password: \${{ secrets.GITHUB_TOKEN }}
 LOGIN
 
-  my $image = container($step);                                                 # The image we are going to build
+  my $image = container($name);                                                 # The image we are going to build
   my $build = <<"BUILD";                                                        # Add this tool to the previous image built
 
       - name: Build step $step
         uses: docker/build-push-action\@v4
         with:
           context: $stepsDir
-          file: $stepsDir/$step.txt
+          file: $stepsDir/$name.txt
           push: true
           tags: $image
 BUILD
@@ -139,7 +129,21 @@ BUILD
  }
 #@yml = ($yml[0], $yml[6]);
 
-my $yml = join "\n", @yml;
+my $yml = join "\n", @yml;                                                      # Workflow as a string
 #say STDERR $yml; exit;
-my $f = writeFileUsingSavedToken $user, $repo, $wf, $yml;                       # Upload workflow
-lll "$f  Ubuntu work flow for $repo";
+
+my @files = searchDirectoryTreesForMatchingFiles($home, @ext);                  # Files to upload
+   @files = changedFiles $shaFile, @files;                                      # Filter out files that have not changed
+
+for my $s(@files)                                                               # Upload each selected file
+ {my $c = readBinaryFile $s;                                                    # Load file
+
+  $c = expandWellKnownWordsAsUrlsInMdFormat $c if $s =~ m(README);              # Expand README
+
+  my $t = swapFilePrefix $s, $home;                                             # File on github
+  my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                       # Write file into github
+  lll "$w  $t";
+ }
+
+my $workFlowUpload = writeFileUsingSavedToken $user, $repo, $wf, $yml;          # Upload workflow
+lll "$workFlowUpload  Ubuntu work flow for $repo";
