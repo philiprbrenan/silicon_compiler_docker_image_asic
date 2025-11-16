@@ -1,4 +1,4 @@
-# Test 2025-11-16 at 14:23:10
+# Test 2025-11-16 at 15:16:53
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 0
+      - name: base
         uses: docker/build-push-action@v4
         with:
           context: steps
@@ -53,7 +53,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 1
+      - name: openroad
         uses: docker/build-push-action@v4
         with:
           context: steps
@@ -79,7 +79,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 2
+      - name: klayout
         uses: docker/build-push-action@v4
         with:
           context: steps
@@ -105,7 +105,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 3
+      - name: yosys
         uses: docker/build-push-action@v4
         with:
           context: steps
@@ -131,7 +131,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 4
+      - name: sv2v
         uses: docker/build-push-action@v4
         with:
           context: steps
@@ -157,7 +157,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Build step 5
+      - name: yosys-slang
         uses: docker/build-push-action@v4
         with:
           context: steps
