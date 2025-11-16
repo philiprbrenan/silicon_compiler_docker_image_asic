@@ -7,7 +7,8 @@ https://github.com/philiprbrenan/silicon_compiler_mod_A_in_mod_B.
 
 The additional tools installed are:
 
-```openroad klayout yosys sv2v yosys-slang
+```
+openroad klayout yosys sv2v yosys-slang
 ```
 
 The resulting [Docker](https://en.wikipedia.org/wiki/Docker_(software)) image can be seen at:https://github.com/philiprbrenan/silicon_compiler_docker_image_asic/pkgs/container/silicon_compiler_docker_image_asic
