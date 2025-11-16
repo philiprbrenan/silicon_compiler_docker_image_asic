@@ -88,7 +88,7 @@ END
 for my $step(keys @tools)                                                       # Add each tool to the build
  {my $name  = $tools[$step];
   my $step1 = $step - 1;
-  my $needs = $step ? "needs: step$step1" : "";
+  my $needs = $step ? "needs: step$tools[$step1]" : "";                         # Base build has no predecessor, otherwise use output of previous step
 
   my $job_header = <<"JOB_HEADER";                                              # Each step is built as a separate job so that we get a clean empty machine each time - else we will run out of file space
   step$step:
