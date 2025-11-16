@@ -60,9 +60,9 @@ RUN python3 -m pip install --no-cache-dir .
 RUN python3 -m pip list
 END
 
-for my $t(@tools)                                                               # Install each tool in a seperate docker image built on the previous image
- {next if $t eq $base;                                                          # Skip base as already installed
-  my $from = container($t);                                                     # Precious docker image
+for my $t(keys @tools)                                                          # Install each tool in a seperate docker image built on the previous image
+ {next unless $t;                                                               # Skip base as already installed
+  my $from = container($tools[$t-1]);                                           # Precious docker image
   owf(fpe($stepsDir, $t, q(txt)), <<END),                                       # The tools start at 1 because 0 is occupied by the base install
 FROM $from
 RUN sc-install $t
