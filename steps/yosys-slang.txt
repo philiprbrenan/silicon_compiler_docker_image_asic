@@ -1,4 +1,4 @@
 FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:sv2v
-RUN sc-install 5
+RUN sc-install yosys-slang
 WORKDIR /app
 CMD ["/bin/bash"]
