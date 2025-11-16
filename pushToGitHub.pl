@@ -96,7 +96,8 @@ jobs:
 END
 
 for my $step(0 .. 1+@tools)                                                     # Each step of the build - base install plus a build for each tool
- {my $Step = $step - 1;
+ {my $Step  = $step - 1;
+  my $name  = $step > 0 ? $tools[$Step] : "Base";
   my $needs = $step > 0 ? "needs: step$Step" : "";
 
   my $job_header = <<"JOB_HEADER";                                              # Each step is built as a separate job so that we get a clean empty machine each time - else we will run out of file space
@@ -138,7 +139,6 @@ BUILD
 #@yml = ($yml[0], $yml[6]);
 
 my $yml = join "\n", @yml;
-say STDERR $yml;
-
+say STDERR $yml; exit;
 my $f = writeFileUsingSavedToken $user, $repo, $wf, $yml;                       # Upload workflow
 lll "$f  Ubuntu work flow for $repo";
