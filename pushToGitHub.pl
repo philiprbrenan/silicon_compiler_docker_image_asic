@@ -140,6 +140,6 @@ BUILD
 #@yml = ($yml[0], $yml[6]);
 
 my $yml = join "\n", @yml;
-say STDERR $yml; exit;
+#say STDERR $yml; exit;
 my $f = writeFileUsingSavedToken $user, $repo, $wf, $yml;                       # Upload workflow
 lll "$f  Ubuntu work flow for $repo";
