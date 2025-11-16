@@ -1,2 +1,10 @@
-# silicon_compiler_docker_image_asic
-silicon compiler docker image asic
+# Silicon Compiler Docker Image
+
+Create a [Docker](https://en.wikipedia.org/wiki/Docker_(software)) image from the latest version of [Silicon Compiler](https://docs.siliconcompiler.com/en/latest/index.html) 
+```
+docker run -it --rm sc
+```
+
+```
+philiprbrenan/silicon_compiler__docker_image
+```
