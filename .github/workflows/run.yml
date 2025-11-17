@@ -1,4 +1,4 @@
-# Test 2025-11-17 at 01:13:02
+# Test 2025-11-17 at 01:19:55
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -17,6 +17,11 @@ jobs:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
+
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
 
 
       - name: Log in to GitHub Container Registry
@@ -44,6 +49,11 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
+
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -69,6 +79,11 @@ jobs:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
+
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
 
 
       - name: Log in to GitHub Container Registry
@@ -96,6 +111,11 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
+
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -122,6 +142,11 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
+
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -147,6 +172,11 @@ jobs:
 
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
+
+      - name: Checkout repo silicon_compiler_docker_image_asic
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
 
 
       - name: Log in to GitHub Container Registry
