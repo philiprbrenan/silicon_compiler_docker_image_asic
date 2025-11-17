@@ -1,4 +1,0 @@
-FROM ghcr.io/philiprbrenan/silicon_compiler_docker_image_asic:base
-RUN sc-install openroad
-WORKDIR /app
-CMD ["/bin/bash"]
