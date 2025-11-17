@@ -108,12 +108,9 @@ JOB_HEADER
 CHECKOUT
 
   my $createBuildFiles = <<"CREATEBUILDFILES";                                  # Checkout the repo
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 CREATEBUILDFILES
 
