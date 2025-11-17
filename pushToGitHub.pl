@@ -136,7 +136,8 @@ LOGIN
           tags: $image
 BUILD
 
-  push @yml, join "\n", $job_header, $checkout, $login, $build;                 # Complete job for this step
+  push @yml, join "\n",                                                         # Complete job for this step
+    $job_header, $checkout, $createBuildFiles, $login, $build;
  }
 #@yml = ($yml[0], $yml[6]);
 
