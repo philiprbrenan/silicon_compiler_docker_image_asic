@@ -107,8 +107,8 @@ JOB_HEADER
         uses: actions/checkout\@v3
 CHECKOUT
 
-  my $createBuildFiles = <<"CREATEBUILDFILES";                                                  # Checkout the repo
-      - name: Checkout repo $repo
+  my $createBuildFiles = <<"CREATEBUILDFILES";                                  # Checkout the repo
+      - name: Create docker build files
         run: |
           cpan -Ti Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
