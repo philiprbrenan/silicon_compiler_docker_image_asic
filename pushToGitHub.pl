@@ -110,7 +110,7 @@ CHECKOUT
   my $createBuildFiles = <<"CREATEBUILDFILES";                                  # Checkout the repo
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 CREATEBUILDFILES
 
