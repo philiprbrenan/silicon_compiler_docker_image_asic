@@ -14,7 +14,7 @@ use GitHub::Crud qw(:all);
 my $repo     = q(silicon_compiler_docker_image_asic);                           # Repo
 my $user     = q(philiprbrenan);                                                # User
 my $home     = fpd q(/home/phil/sc/), $repo;                                    # Home folder
-my $wf       = q(.github/workflows/run.yml);                                    # Work flow on Ubuntu
+my $wf       = q(.github/workflows/docker_image_asic.yml);                      # Work flow on Ubuntu
 my $shaFile  = fpe $home, q(sha);                                               # Sh256 file sums for each known file to detect changes
 my @ext      = qw(.pl .md);                                                     # Extensions of files to upload to github
 my $create   = @ARGV and $ARGV[0] =~ m(createBuildFiles)i;                      # Just create the build files needed by docker and exit
@@ -84,7 +84,9 @@ run-name: $repo
 on:
   push:
     paths:
-      - .github/workflows/run.yml
+      - .github/workflows/$wf
+
+  workflow_dispatch:
 
 jobs:
 END
