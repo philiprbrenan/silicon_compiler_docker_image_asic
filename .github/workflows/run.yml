@@ -1,4 +1,4 @@
-# Test 2025-11-17 at 01:28:11
+# Test 2025-11-17 at 01:35:47
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -18,12 +18,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -52,12 +49,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -86,12 +80,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -120,12 +111,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -154,12 +142,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -188,12 +173,9 @@ jobs:
       - name: Checkout repo silicon_compiler_docker_image_asic
         uses: actions/checkout@v3
 
-      - name: Install Data::Dump
-        run: |
-          cpan -Ti Data::Dump
       - name: Create docker build files
         run: |
-          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
+          sudo cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 
 
