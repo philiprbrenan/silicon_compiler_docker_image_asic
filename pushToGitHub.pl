@@ -108,11 +108,9 @@ JOB_HEADER
 CHECKOUT
 
   my $createBuildFiles = <<"CREATEBUILDFILES";                                  # Checkout the repo
-      - name: Install Perl moduels needed to create docker build files
-        run: |
-          cpan -Ti Data::Dump Data::Table::Text GitHub::Crud
       - name: Create docker build files
         run: |
+          cpan -Ti Digest::SHA1 Data::Dump Data::Table::Text GitHub::Crud
           perl pushToGitHub.pl createBuildFiles
 CREATEBUILDFILES
 
