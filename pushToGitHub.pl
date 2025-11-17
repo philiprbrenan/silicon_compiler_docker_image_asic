@@ -153,11 +153,11 @@ for my $s(@files)                                                               
 
 if ($upload)                                                                    # Upload the files to github
  {my @gf = searchDirectoryTreesForMatchingFiles($build, @ext);                  # Files to upload
-#    @gf = changedFiles $shaFile, @files;                                       # Filter out files that have not changed
+     @gf = changedFiles $shaFile, @gf;                                          # Filter out files that have not changed
 
-say STDERR "AAAA ", dump(\@gf);
   for my $s(@gf)                                                                # Upload each selected file
    {my $c = readBinaryFile $s;                                                  # Load file
+say STDERR "AAAA $s";
     my $t = swapFilePrefix $s, $build;                                          # File on github
     my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                     # Write file into github
     lll "$w  $t";
