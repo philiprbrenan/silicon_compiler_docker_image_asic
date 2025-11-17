@@ -14,14 +14,16 @@ use GitHub::Crud qw(:all);
 my $repo     = q(silicon_compiler_docker_image_asic);                           # Repo
 my $user     = q(philiprbrenan);                                                # User
 my $home     = fpd q(/home/phil/sc/), $repo;                                    # Home folder
+my $build    = fpd $home, q(build);                                             # Folder in which to build the files to be pushed to github
 my $wf       = q(.github/workflows/docker_image_asic.yml);                      # Work flow on Ubuntu
 my $shaFile  = fpe $home, q(sha);                                               # Sh256 file sums for each known file to detect changes
-my @ext      = qw(.pl .md);                                                     # Extensions of files to upload to github
-my $create   = @ARGV and $ARGV[0] =~ m(createBuildFiles)i;                      # Just create the build files needed by docker and exit
+my @ext      = qw(.pl .md .txt .yml);                                           # Extensions of files to upload to github
+my @files    = qw(pushToGitHub.pl README.md);                                   # Files to upload
+my $upload   = 1;                                                               # Upload to github if true
 
 my $registry = 'ghcr.io';                                                       # Container registery
 my $baseOS   = 'ubuntu:22.04';                                                  # Base docker image
-my $stepsDir = 'steps';                                                         # Folder containing docker build files for each step of the builds
+my $stepsDir = fpd $build, 'steps';                                             # Folder containing docker build files for each step of the builds
 my $base     = q(base);                                                         # Base for silicon compiler
 my @tools    = ($base, qw(openroad klayout yosys sv2v yosys-slang));            # Base plus tools to install for silicon compiler
 
@@ -73,11 +75,6 @@ CMD ["/bin/bash"]
 END
  }
 
-if ($create)                                                                    # Exit if all we have to do is create the build files
- {say STDERR "Exiting after creating docker build files";
-  exit;
- }
-
 my $dt  = dateTimeStamp;                                                        # Ensure update occurs by making the file contents unique
 my @yml = <<"END";                                                              # Create workflow
 # Test $dt
@@ -87,7 +84,7 @@ run-name: $repo
 on:
   push:
     paths:
-      - .github/workflows/$wf
+      - $wf
 
   workflow_dispatch:
 
@@ -135,32 +132,34 @@ LOGIN
       - name: $name
         uses: docker/build-push-action\@v4
         with:
-          context: $stepsDir
-          file: $stepsDir/$name.txt
+          context: steps
+          file: steps/$name.txt
           push: true
           tags: $image
 BUILD
 
-  push @yml, join "\n",                                                         # Complete job for this step
-    $job_header, $checkout, $createBuildFiles, $login, $build;
+  push @yml, join "\n", $job_header, $checkout, $login, $build;                 # Complete job for this step
  }
 #@yml = ($yml[0], $yml[6]);
 
 my $yml = join "\n", @yml;                                                      # Workflow as a string
-#say STDERR $yml; exit;
-
-my @files = searchDirectoryTreesForMatchingFiles($home, @ext);                  # Files to upload
-   @files = changedFiles $shaFile, @files;                                      # Filter out files that have not changed
+owf(fpf($build, $wf), $yml);                                                    # Save workflow
 
 for my $s(@files)                                                               # Upload each selected file
  {my $c = readBinaryFile $s;                                                    # Load file
-
   $c = expandWellKnownWordsAsUrlsInMdFormat $c if $s =~ m(README);              # Expand README
-
-  my $t = swapFilePrefix $s, $home;                                             # File on github
-  my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                       # Write file into github
-  lll "$w  $t";
+  owf fpf($build, $s), $c;                                                      # Write file into build for github folder
  }
 
-my $workFlowUpload = writeFileUsingSavedToken $user, $repo, $wf, $yml;          # Upload workflow
-lll "$workFlowUpload  Ubuntu work flow for $repo";
+if ($upload)                                                                    # Upload the files to github
+ {my @gf = searchDirectoryTreesForMatchingFiles($build, @ext);                  # Files to upload
+#    @gf = changedFiles $shaFile, @files;                                       # Filter out files that have not changed
+
+say STDERR "AAAA ", dump(\@gf);
+  for my $s(@gf)                                                                # Upload each selected file
+   {my $c = readBinaryFile $s;                                                  # Load file
+    my $t = swapFilePrefix $s, $build;                                          # File on github
+    my $w = writeFileUsingSavedToken($user, $repo, $t, $c);                     # Write file into github
+    lll "$w  $t";
+   }
+ }
