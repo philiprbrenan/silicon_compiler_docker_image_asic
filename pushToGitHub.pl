@@ -73,7 +73,10 @@ CMD ["/bin/bash"]
 END
  }
 
-exit if $create;                                                                # Exit if all we have to do is create the build files
+if ($create)                                                                    # Exit if all we have to do is create the build files
+ {say STDERR "Exiting after creating docker build files";
+  exit;
+ }
 
 my $dt  = dateTimeStamp;                                                        # Ensure update occurs by making the file contents unique
 my @yml = <<"END";                                                              # Create workflow
