@@ -16,7 +16,8 @@ my $user     = q(philiprbrenan);                                                
 my $home     = fpd q(/home/phil/sc/), $repo;                                    # Home folder
 my $wf       = q(.github/workflows/run.yml);                                    # Work flow on Ubuntu
 my $shaFile  = fpe $home, q(sha);                                               # Sh256 file sums for each known file to detect changes
-my @ext      = qw(.pl .py .txt .md);                                            # Extensions of files to upload to github
+my @ext      = qw(.pl .md);                                                     # Extensions of files to upload to github
+my $create   = @ARGV and $ARGV[0] =~ m(createBuildFiles)i;                      # Just create the build files needed by docker and exit
 
 my $registry = 'ghcr.io';                                                       # Container registery
 my $baseOS   = 'ubuntu:22.04';                                                  # Base docker image
@@ -72,6 +73,8 @@ CMD ["/bin/bash"]
 END
  }
 
+exit if $create;                                                                # Exit if all we have to do is create the build files
+
 my $dt  = dateTimeStamp;                                                        # Ensure update occurs by making the file contents unique
 my @yml = <<"END";                                                              # Create workflow
 # Test $dt
@@ -103,6 +106,13 @@ JOB_HEADER
       - name: Checkout repo $repo
         uses: actions/checkout\@v3
 CHECKOUT
+
+  my $createBuildFiles = <<"CREATEBUILDFILES";                                                  # Checkout the repo
+      - name: Checkout repo $repo
+        run: |
+          cpan -Ti Data::Table::Text GitHub::Crud
+          perl pushToGitHub.pl createBuildFiles
+CREATEBUILDFILES
 
   my $login = <<"LOGIN";                                                        # Login in to the container registry
 
