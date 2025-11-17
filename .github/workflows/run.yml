@@ -1,4 +1,4 @@
-# Test 2025-11-17 at 01:20:38
+# Test 2025-11-17 at 01:21:31
 name: Build and Push Docker Image
 run-name: silicon_compiler_docker_image_asic
 
@@ -20,7 +20,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -82,7 +82,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -113,7 +113,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -144,7 +144,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
@@ -175,7 +175,7 @@ jobs:
 
       - name: Create docker build files
         run: |
-          cpan -Ti Data::Table::Text GitHub::Crud
+          cpan -Ti Data::Table::Text GitHub::Crud Data::Dump
           perl pushToGitHub.pl createBuildFiles
 
 
